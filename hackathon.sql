@@ -119,12 +119,10 @@ where status = 'Active'
 group by policy_id;
 
 -- 12. Liệt kê tất cả các nhân viên trong hệ thống gồm: agent_id, full_name và policy_id tương ứng. Kết quả phải bao gồm cả những nhân viên chưa từng ký hợp đồng nào (Sử dụng LEFT JOIN).
-insert into Customers(customer_id,full_name,phone,address) values
-	('C009', 'Nguyen Van Abc', '0912345670', 'Hanoi, Vietnam');
 
-select p.agent_id, c.full_name, p.policy_id
-from customers c
-left join Policies p on p.customer_id = c.customer_id;
+select i.agent_id, i.full_name, p.policy_id
+from InsuranceAgents i
+left join Policies p on p.customer_id = i.agent_id;
 
 -- 13. Tính tổng tiền bồi thường (SUM(amount)) theo từng phương thức thanh toán (payment_method). Kết quả hiển thị 2 cột: payment_method và Total_Payout.
 select payment_method, sum(amount) as Total_Payout
@@ -132,9 +130,9 @@ from ClaimPayments
 group by payment_method;
 
 -- 14. Thống kê số lượng hợp đồng mà mỗi nhân viên đã ký. Hiển thị agent_id, full_name và Total_Policies. Chỉ hiện những nhân viên có từ 1 hợp đồng trở lên.
-select p.agent_id, c.full_name, count(policy_id) as `Total_Policies`
+select i.agent_id, i.full_name, count(policy_id) as `Total_Policies`
 from Policies p
-join customers c on p.customer_id = c.customer_id
+join InsuranceAgents i on p.agent_id = i.agent_id
 group by policy_id
 having `Total_Policies` >= 1;
 
